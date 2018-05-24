@@ -1,4 +1,3 @@
-
 #!/usr/bin/env bash
 
 PRIMARY_IP4=$(ip route get 255.255.255.255 | tr -s ' ' | grep -oE 'src [0-9\.]+' | cut -d' ' -f2)
