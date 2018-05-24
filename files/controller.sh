@@ -6,6 +6,10 @@ PRIMARY_IP6=$(ip route get ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff | tr -s ' ' |
 
 state="unknown"
 
+function log() {
+	echo "$(date -u) ${*}"
+}
+
 function set_down() {
 	test "${state}" == "down" && return 0
 	state="down"
@@ -55,10 +59,6 @@ function update_ipset() {
 	ipset swap "v6" "${tmptable}-v6"
 	ipset destroy "${tmptable}-v4"
 	ipset destroy "${tmptable}-v6"
-}
-
-function log() {
-	echo "$(date -u) ${*}"
 }
 
 set_down

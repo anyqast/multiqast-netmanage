@@ -2,19 +2,23 @@
 
 cd /tmp
 
-ip2long() {
+function log() {
+    echo "$(date -u) ${*}"
+}
+
+function ip2long() {
 	local o1 o2 o3 o4 IFS
 	IFS=. read -r o1 o2 o3 o4 <<< "${1}"
 	echo -n "$(($((${o4}))+$((${o3}*256))+$((${o2}*256*256))+$((${o1}*256*256*256))))"
 }
-long2ip() {
+function long2ip() {
 	echo -n "$((${1}>>24&255)).$((${1}>>16&255)).$((${1}>>8&255)).$((${1}&255))"
 }
 
 PRIMARY_IP4=$(ip route get 255.255.255.255 | tr -s ' ' | grep -oE 'src [0-9\.]+' | cut -d' ' -f2)
 PRIMARY_IP6=$(ip route get ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff | tr -s ' ' | grep -oE 'src [0-9a-f:]+' | cut -d' ' -f2)
 
-iptrb() {
+function iptrb() {
 	while "${@}" 2> /dev/null; do true; done
 }
 
@@ -47,7 +51,7 @@ ip6tables -t raw -A PREROUTING -i lo -j ACCEPT
 iptables  -t raw -A PREROUTING -m set --match-set managed4 dst -m set ! --match-set v4 dst,dst -j DROP
 ip6tables -t raw -A PREROUTING -m set --match-set managed6 dst -m set ! --match-set v6 dst,dst -j DROP
 
-parse_neighbor() {
+function parse_neighbor() {
 	local bgptype bgpaddr bgpas bgppass IFS=','
 	read bgptype bgpaddr bgpas bgppass <<< "${2}"
 	echo "protocol bgp bgp${1} from ${bgptype}bgp {"
@@ -100,7 +104,7 @@ ipset destroy "${tmptable}-managed6"
 
 if test "${MANAGED_ROUTES}" == "static"; then
 	ip link add dummy0 type dummy
-	log "Adding prefixes ..."
+	log "Adding (static) prefixes ..."
 	for bgpprefix in ${BGP_PREFIXES}; do
 		log "... ${bgpprefix}"
 		ip route add local "${bgpprefix}" dev dummy0
