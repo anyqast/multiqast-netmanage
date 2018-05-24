@@ -98,6 +98,15 @@ ipset swap "managed6" "${tmptable}-managed6"
 ipset destroy "${tmptable}-managed4"
 ipset destroy "${tmptable}-managed6"
 
+if test "${MANAGED_ROUTES}" == "static"; then
+	ip link add dummy0 type dummy
+	log "Adding prefixes ..."
+	for bgpprefix in ${BGP_PREFIXES}; do
+		log "... ${bgpprefix}"
+		ip route add local "${bgpprefix}" dev dummy0
+	done
+fi
+
 cat "/etc/bird.conf.tpl" | sed "s|{{BGP_AS}}|${BGP_AS}|g;s|{{ROUTER_ID}}|${PRIMARY_IP4}|g" > "/etc/bird.d/bird"
 
 exec "/usr/bin/supervisord" "-kc/etc/supervisord.conf"

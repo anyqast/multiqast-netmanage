@@ -6,6 +6,7 @@ RUN apk upgrade --no-cache \
 ADD files /
 ENV BGP_AS=65534 \
     BGP_PREFIXES= \
-    BGP_NEIGHBORS=
+    BGP_NEIGHBORS= \
+	MANAGED_ROUTES=static
 CMD ["/boot.sh"]
 HEALTHCHECK --interval=5s --timeout=15s --start-period=300s --retries=6 CMD /healthcheck.sh
