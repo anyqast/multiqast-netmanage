@@ -51,6 +51,9 @@ ip6tables -t raw -A PREROUTING -i lo -j ACCEPT
 iptables  -t raw -A PREROUTING -m set --match-set managed4 dst -m set ! --match-set v4 dst,dst -j DROP
 ip6tables -t raw -A PREROUTING -m set --match-set managed6 dst -m set ! --match-set v6 dst,dst -j DROP
 
+echo 1 > /proc/sys/net/ipv4/ip_nonlocal_bind
+echo 1 > /proc/sys/net/ipv6/ip_nonlocal_bind
+
 function parse_neighbor() {
 	local bgptype bgpaddr bgpas bgppass IFS=','
 	read bgptype bgpaddr bgpas bgppass <<< "${2}"
