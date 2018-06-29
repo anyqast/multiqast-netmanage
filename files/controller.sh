@@ -42,7 +42,7 @@ function update_ipset() {
 	(
 		echo "create ${tmptable}-v4 hash:ip,port family inet hashsize 1024 maxelem 65536"
 		echo "create ${tmptable}-v6 hash:ip,port family inet6 hashsize 1024 maxelem 65536"
-		ss -nltu | cat | awk '($1 == "tcp" || $1 == "udp") && ($6 == ":::*" || $6 == "*:*") {print $1, $5}' | sed -r 's/:([0-9]+)$/ \1/' | tr -d '[]' | awk '$2 != "*" && $2 != "::" && $2 != "::1" && $2 !~ "^127\\\."' | sort -u | tee /dev/stderr | while read proto ip port; do
+		ss -nltu | cat | awk '($1 == "tcp" || $1 == "udp") && ($6 == ":::*" || $6 == "*:*" || $6 == "[::]:*" || $6 == "0.0.0.0:*") {print $1, $5}' | sed -r 's/:([0-9]+)$/ \1/' | tr -d '[]' | awk '$2 != "*" && $2 != "::" && $2 != "::1" && $2 != "0.0.0.0" && $2 != "[::]" && $2 !~ "^127\\\."' | sort -u | tee /dev/stderr | while read proto ip port; do
 			if echo "${ip}" | fgrep -q :; then
 				echo "add ${tmptable}-v6 ${ip},${proto}:${port}"
 				echo "add ${tmptable}-v6 ${ip},ipv6-icmp:echo-request"
