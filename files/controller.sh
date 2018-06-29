@@ -37,7 +37,7 @@ function set_up() {
 }
 
 function update_ipset() {
-	log "Updating ipset:"
+	log "Updating ipset piped:"
 	tmptable=$(head -c128 /dev/urandom | md5sum | head -c 8)
 	(
 		echo "create ${tmptable}-v4 hash:ip,port family inet hashsize 1024 maxelem 65536"
@@ -75,6 +75,8 @@ while true; do
 	_listeners=$(ss -nltu | cat | awk '($1 == "tcp" || $1 == "udp") && ($6 == ":::*" || $6 == "*:*" || $6 == "[::]:*" || $6 == "0.0.0.0:*") {print $1, $5}' | sed -r 's/:([0-9]+)$/ \1/' | tr -d '[]' | awk '$2 != "*" && $2 != "::" && $2 != "::1" && $2 != "0.0.0.0" && $2 != "[::]" && $2 !~ "^127\\\."' | sort -u)
 	_listeners_cache=$(echo "${_0listeners}" | md5sum | cut -d' ' -f1)
 	if [ "${listeners_cache}" != "${_listeners_cache}" ]; then
+		echo "Updating ipset with:"
+		echo "${_listeners}"
 		echo "${_listeners}" | update_ipset
 		listeners_cache="${_listeners_cache}"
 	fi
