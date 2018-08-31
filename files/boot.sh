@@ -78,7 +78,7 @@ ipset create "${tmptable}-managed6" hash:net family inet6
 (
 	echo "protocol static static4 {"
 	echo "	ipv4 {"
-	echo "		import all;"
+	echo "		import none;"
 	echo "	};"
 	echo "	disabled on;"
 	for bgpprefix in ${BGP_PREFIXES}; do
@@ -90,7 +90,7 @@ ipset create "${tmptable}-managed6" hash:net family inet6
 (
 	echo "protocol static static6 {"
 	echo "	ipv6 {"
-	echo "		import all;"
+	echo "		import none;"
 	echo "	};"
 	echo "	disabled yes;"
 	for bgpprefix in ${BGP_PREFIXES}; do
