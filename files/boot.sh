@@ -60,6 +60,7 @@ function parse_neighbor() {
 	echo "protocol bgp bgp${1} from ${bgptype}bgp {"
 	echo "	neighbor ${bgpaddr} as ${bgpas};"
 	test -n "${bgppass}" && echo '	password "'"${bgppass}"'";'
+	test "${bgpas}" == "${BGP_AS}" && test -n "${BGP_RRCLIENT}" && echo '	rr client;'
 	echo "}"
 }
 
