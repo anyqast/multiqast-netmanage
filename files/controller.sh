@@ -79,7 +79,7 @@ while true; do
 		echo "${_listeners}" | update_ipset
 		listeners_cache="${_listeners_cache}"
 	fi
-	if curl -sf --unix-socket /var/run/docker.sock http://localhost/containers/json 2> /dev/null | jq -Mcr '.[].Id' 2> /dev/null | xargs -n1 -P1 -I% curl -sf --unix-socket /var/run/docker.sock http://localhost/containers/%/json 2> /dev/null | jq -Mcrs 'map(select(.State.Health != null)) | .[].State.Health.Status' 2> /dev/null | grep -qvE '^healthy$'; then
+	if curl -sf --unix-socket /var/run/docker.sock "http://localhost/containers/json?all=1" 2> /dev/null | jq -Mcr '.[].Id' 2> /dev/null | xargs -n1 -P1 -I% curl -sf --unix-socket /var/run/docker.sock http://localhost/containers/%/json 2> /dev/null | jq -Mcrs 'map(select(.State.Health != null)) | .[].State.Health.Status' 2> /dev/null | grep -qvE '^healthy$'; then
 		set_down
 	else
 		set_up
