@@ -44,7 +44,7 @@ template bgp externalbgp from xbgp {
 			reject;
 		};
 		preference 100;
-		import none;
+		import all;
 	};
 	ipv6 {
 		add paths rx;
@@ -53,7 +53,7 @@ template bgp externalbgp from xbgp {
 			reject;
 		};
 		preference 100;
-		import none;
+		import all;
 	};
 }
 template bgp internalbgp from xbgp {
