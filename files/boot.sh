@@ -108,6 +108,7 @@ ipset destroy "${tmptable}-managed6"
 
 if test "${MANAGED_ROUTES}" == "static"; then
 	ip link add dummy0 type dummy
+	ip link set dev dummy0 up
 	log "Adding (static) prefixes ..."
 	for bgpprefix in ${BGP_PREFIXES}; do
 		log "... ${bgpprefix}"

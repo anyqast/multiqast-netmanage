@@ -28,6 +28,7 @@ function set_up() {
 	birdc enable static6
 	if test "${MANAGED_ROUTES}" == "dynamic"; then
 		ip link add dummy0 type dummy
+		ip link set dev dummy0 up
 		log "Adding prefixes ..."
 		for bgpprefix in ${BGP_PREFIXES}; do
 			log "... ${bgpprefix}"
