@@ -10,13 +10,13 @@ ipv6 table master6;
 template bgp xbgp {
 	ipv4 {
 		add paths on;
-		next hop self;
+		next hop self on;
 		import none;
 		export none;
 	};
 	ipv6 {
 		add paths on;
-		next hop self;
+		next hop self on;
 		import none;
 		export none;
 	};
@@ -44,7 +44,6 @@ template bgp externalbgp from xbgp {
 			reject;
 		};
 		preference 100;
-		import all;
 	};
 	ipv6 {
 		add paths rx;
@@ -53,7 +52,6 @@ template bgp externalbgp from xbgp {
 			reject;
 		};
 		preference 100;
-		import all;
 	};
 }
 template bgp internalbgp from xbgp {

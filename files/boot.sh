@@ -61,6 +61,7 @@ function parse_neighbor() {
 	echo "	neighbor ${bgpaddr} as ${bgpas};"
 	test -n "${bgppass}" && echo '	password "'"${bgppass}"'";'
 	test "${bgpas}" == "${BGP_AS}" && test -n "${BGP_RRCLIENT}" && echo '	rr client;'
+	test -n "${BGP_IMPORT}" && test "${bgptype}" == "external" && echo "ipv4 { import ${BGP_IMPORT}; }; ipv6 { import ${BGP_IMPORT}; };"
 	echo "}"
 }
 
