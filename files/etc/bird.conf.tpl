@@ -57,8 +57,6 @@ template bgp externalbgp from xbgp {
 template bgp internalbgp from xbgp {
 	rr client;
 	enable extended messages on;
-	graceful restart on;
-	graceful restart time 3600;
 	startup hold time 3600;
 	hold time 3600;
 	ipv4 {
