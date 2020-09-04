@@ -29,11 +29,11 @@ template bgp xbgp {
 	interpret communities off;
 	error wait time 1,1;
 	error forget time 1;
-	keepalive time 5;
+	keepalive time 1;
 	startup hold time 60;
 	hold time 30;
-	connect delay time 0;
-	connect retry time 1;
+	connect delay time 5;
+	connect retry time 60;
 	enable route refresh on;
 }
 template bgp externalbgp from xbgp {
@@ -57,6 +57,10 @@ template bgp externalbgp from xbgp {
 template bgp internalbgp from xbgp {
 	rr client;
 	enable extended messages on;
+	graceful restart on;
+	graceful restart time 3600;
+	startup hold time 3600;
+	hold time 3600;
 	ipv4 {
 		add paths tx;
 		preference 200;
