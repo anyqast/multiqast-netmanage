@@ -61,7 +61,6 @@ function parse_neighbor() {
 	echo "	neighbor ${bgpaddr} as ${bgpas};"
 	test -n "${bgppass}" && echo '	password "'"${bgppass}"'";'
 	test "${bgpas}" == "${BGP_AS}" && test -n "${BGP_RRCLIENT}" && echo '	rr client;'
-	test -n "${BGP_IMPORT}" && test "${bgptype}" == "external" && echo "	ipv4 { import ${BGP_IMPORT}; };" && echo "	ipv6 { import ${BGP_IMPORT}; };"
 	echo "${bgpaddr}" | fgrep -q : && {
 		test -n "${BGP6_BIND_ADDR}" && {
 			echo "	local ${BGP6_BIND_ADDR};"
@@ -69,6 +68,8 @@ function parse_neighbor() {
 		}
 		test -n "${BGP6_BIND_PORT}" && echo "	local port ${BGP6_BIND_PORT};"
 		test -n "${BGP6_BIND_ADDR}${BGP6_BIND_PORT}" && echo "	strict bind on;"
+		echo "	ipv4 { import none; export none; };"
+		test -n "${BGP_IMPORT}" && test "${bgptype}" == "external" && echo "	ipv6 { import ${BGP_IMPORT}; };"
 	}
 	echo "${bgpaddr}" | fgrep -q . && {
 		test -n "${BGP4_BIND_ADDR}" && {
@@ -77,6 +78,8 @@ function parse_neighbor() {
 		}
 		test -n "${BGP4_BIND_PORT}" && echo "	local port ${BGP4_BIND_PORT};"
 		test -n "${BGP4_BIND_ADDR}${BGP4_BIND_PORT}" && echo "	strict bind on;"
+		echo "	ipv6 { import none; export none; };"
+		test -n "${BGP_IMPORT}" && test "${bgptype}" == "external" && echo "	ipv4 { import ${BGP_IMPORT}; };"
 	}
 	echo "}"
 }

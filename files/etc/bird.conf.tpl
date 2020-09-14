@@ -7,16 +7,17 @@ watchdog warning 5 s;
 watchdog timeout 30 s;
 ipv4 table master4;
 ipv6 table master6;
+
 template bgp xbgp {
 	ipv4 {
 		add paths on;
-		next hop self on;
+		next hop keep on;
 		import none;
 		export none;
 	};
 	ipv6 {
 		add paths on;
-		next hop self on;
+		next hop keep on;
 		import none;
 		export none;
 	};
@@ -39,41 +40,28 @@ template bgp xbgp {
 template bgp externalbgp from xbgp {
 	ipv4 {
 		add paths rx;
-		export filter {
-			if proto ~ "static4" then accept;
-			reject;
-		};
+		export where proto = "static4";
 		preference 100;
 	};
 	ipv6 {
 		add paths rx;
-		export filter {
-			if proto ~ "static6" then accept;
-			reject;
-		};
+		export where proto = "static6";
 		preference 100;
 	};
 }
 template bgp internalbgp from xbgp {
-	rr client;
 	enable extended messages on;
 	startup hold time 3600;
 	hold time 3600;
 	ipv4 {
 		add paths tx;
 		preference 200;
-		export filter {
-			if proto ~ "static4" then reject;
-			accept;
-		};
+		export where proto != "static4";
 	};
 	ipv6 {
 		add paths tx;
 		preference 200;
-		export filter {
-			if proto ~ "static6" then reject;
-			accept;
-		};
+		export where proto != "static6";
 	};
 }
 include "/etc/bird.d/*.conf";
